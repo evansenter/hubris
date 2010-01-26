@@ -1,0 +1,19 @@
+I. Discourse on things to come (in the spirit of scheming)
+  1. How do I make an object?
+    *=>* {}
+  2. What does *=>* {} mean?
+    Well, *=>* in this context (the context of the README, don't get carried away!) means that the following is a string interpolatable by Hubris.
+  3. Is the following code?
+    {}
+    No! But this is:
+    *=>* {}
+  4. Are we getting comfortable with the semantics of this discussion?
+    I think so!
+  5. So can the {} object do anything?
+    Nope, but lets make it!
+    *=>* { be_nice := "Hello!" }
+  6. Well, what can { be_nice := "Hello!" } do?
+    *=>* { be_nice := "Hello!" } be_nice
+      *<=* "Hello!"
+  7. Wait, there's *=>* and *<=* ‽
+    Let's say *<=* is the response
