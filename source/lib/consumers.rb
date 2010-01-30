@@ -3,15 +3,13 @@ module Consumers
     consume while !eof? && /\s|\t/ =~ @symbol
   end
   
-  def consume_string    
-    returning(Token.new(:STRING, "")) do |token|
-      while consume
-        if /"/ !~ @symbol || /\\/ =~ token.text[-1, 1]
-          token.text << @symbol
-        else
-          consume && break
-        end
-      end
+  def consume_string
+    if match = /"((\\"|[^"])*)"/.match(@input[@position..-1])
+      @position = @position + match.to_s.length + 1
+      @symbol   = @input[@position, 1]
+      Token.new(:STRING, match[1])
+    else
+      raise "Encountered a non-terminated string"
     end
   end
   

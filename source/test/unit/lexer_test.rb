@@ -11,6 +11,10 @@ class LexerTest < Test::Unit::TestCase
     assert_equal [eof], lex(" \t")
   end
   
+  def test_consume_string__empty_case
+    assert_equal [token(:STRING, ''), eof], lex('""')
+  end
+  
   def test_consume_string__base_case
     assert_equal [token(:STRING, 'Dinosaur'), eof], lex('"Dinosaur"')
   end
