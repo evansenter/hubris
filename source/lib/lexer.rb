@@ -9,7 +9,7 @@ class Lexer
   end
   
   def run
-    returning(@tokens) { next_token while @tokens.empty? || @tokens.last.type != :EOF }
+    returning(@tokens) { next_token while @tokens.empty? || @tokens.last.type != :eof }
   end
   
   private

@@ -21,6 +21,6 @@ class Test::Unit::TestCase
   end
   
   def eof
-    token(:EOF, "EOF")
+    token(:eof, nil)
   end
 end

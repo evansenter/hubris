@@ -8,58 +8,58 @@ class ConsumersTest < Test::Unit::TestCase
   end
   
   def test_consume_string__empty_case
-    assert_lex('""', :STRING, "")
+    assert_lex('""', :string, "")
   end
   
   def test_consume_string__base_case
-    assert_lex('"Dinosaur"', :STRING, "Dinosaur")
+    assert_lex('"Dinosaur"', :string, "Dinosaur")
   end
   
   def test_consume_number__positive_integer
-    assert_lex("010", :INTEGER, "010")
+    assert_lex("010", :integer, "010")
   end
   
   def test_consume_number__negative_integer
-    assert_lex("-010", :INTEGER, "-010")
+    assert_lex("-010", :integer, "-010")
   end
   
   def test_consume_number__positive_float
-    assert_lex("010.010", :FLOAT, "010.010")
+    assert_lex("010.010", :float, "010.010")
   end
   
   def test_consume_number__negative_float
-    assert_lex("-010.010", :FLOAT, "-010.010")
+    assert_lex("-010.010", :float, "-010.010")
   end
   
   def test_consume_message
-    assert_lex("message", :MESSAGE, "message")
+    assert_lex("message", :message, "message")
   end
   
   def test_consume_message__starts_with_capital_letter
-    assert_lex("CrypticMessage", :MESSAGE, "CrypticMessage")
+    assert_lex("CrypticMessage", :message, "CrypticMessage")
   end
   
   def test_consume_message__starts_with_underscore
-    assert_lex("_cryptic_message", :MESSAGE, "_cryptic_message")
+    assert_lex("_cryptic_message", :message, "_cryptic_message")
   end
   
   def test_consume_message__contains_number
-    assert_lex("Cryptic_Message_1", :MESSAGE, "Cryptic_Message_1")
+    assert_lex("Cryptic_Message_1", :message, "Cryptic_Message_1")
   end
   
   def test_consume_message__contains_question_mark
-    assert_lex("Cryptic?Message?1?", :MESSAGE, "Cryptic?Message?1?")
+    assert_lex("Cryptic?Message?1?", :message, "Cryptic?Message?1?")
   end
   
   def test_consume_binary_message__base_case
-    assert_lex("&", :BINARY_MESSAGE, "&")
+    assert_lex("&", :binary_message, "&")
   end
   
   def test_consume_binary_message__multiple_characters
-    assert_lex("&&", :BINARY_MESSAGE, "&&")
+    assert_lex("&&", :binary_message, "&&")
   end
   
   def test_consume_symbol
-    assert_lex("[", :L_BRACKET, "[")
+    assert_lex("[", :l_bracket, "[")
   end
 end

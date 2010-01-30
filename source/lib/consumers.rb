@@ -1,15 +1,15 @@
 module Consumers
   BINARY_REGEX = /&|\||!|<|=|>|\+|-|\*|\/|%|\^/
   KEY_TOKENS   = {
-    ":" => :COLON,
-    "." => :DOT,
-    "," => :COMMA,
-    "(" => :L_PAREN,
-    ")" => :R_PAREN,
-    "[" => :L_BRACKET,
-    "]" => :R_BRACKET,
-    "{" => :L_SQUIG,
-    "}" => :R_SQUIG
+    ":" => :colon,
+    "." => :dot,
+    "," => :comma,
+    "(" => :l_paren,
+    ")" => :r_paren,
+    "[" => :l_bracket,
+    "]" => :r_bracket,
+    "{" => :l_squig,
+    "}" => :r_squig
   }
   
   def consume_whitespace
@@ -17,7 +17,7 @@ module Consumers
   end
   
   def consume_string
-    @tokens << returning(Token.new(:STRING, "")) do |token|
+    @tokens << returning(Token.new(:string, "")) do |token|
       while consume && /"/ !~ @symbol
         token.text << @symbol
       end
@@ -26,7 +26,7 @@ module Consumers
   end
   
   def consume_number
-    @tokens << returning(Token.new(:INTEGER, @symbol)) do |token|
+    @tokens << returning(Token.new(:integer, @symbol)) do |token|
       while consume && (/[0-9]/ =~ @symbol || becoming_a_float?(token))
         token.text << @symbol
       end
@@ -34,7 +34,7 @@ module Consumers
   end
   
   def consume_message
-    @tokens << returning(Token.new(:MESSAGE, @symbol)) do |token|
+    @tokens << returning(Token.new(:message, @symbol)) do |token|
       while consume && /[a-zA-Z0-9_\?]/ =~ @symbol
         token.text << @symbol 
       end
@@ -42,7 +42,7 @@ module Consumers
   end
   
   def consume_binary_message
-    @tokens << returning(Token.new(:BINARY_MESSAGE, @symbol)) do |token|
+    @tokens << returning(Token.new(:binary_message, @symbol)) do |token|
       while consume && BINARY_REGEX =~ @symbol
         token.text << @symbol
       end
@@ -58,7 +58,7 @@ module Consumers
   
   def next_token
     case @symbol
-    when nil:     @tokens << Token.new(:EOF, "EOF")
+    when nil:         @tokens << Token.new(:eof, nil)
     when /\s|\t/:     consume_whitespace
     when /"/:         consume_string
     when /[0-9]/:     consume_number
@@ -78,7 +78,7 @@ module Consumers
   
   def becoming_a_float?(token)
     returning(/\./ =~ @symbol && !token.text.include?(".") && /[0-9]/ =~ lookahead(1)) do |is_float|
-      token.type = :FLOAT if is_float
+      token.type = :float if is_float
     end
   end
 end
