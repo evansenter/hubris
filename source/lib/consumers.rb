@@ -1,19 +1,23 @@
 module Consumers
   def consume_whitespace
-    consume while /\s/ =~ consume
+    consume while !eof? && /\s|\t/ =~ @symbol
   end
   
-  def consume_string
+  def consume_string    
     returning(Token.new(:STRING, "")) do |token|
-      while /"/ !~ consume || (/\\/ =~ string[-1, 1])
-        token.text << @symbol
+      while consume
+        if /"/ !~ @symbol || /\\/ =~ token.text[-1, 1]
+          token.text << @symbol
+        else
+          consume && break
+        end
       end
     end
   end
   
   def consume_number
     returning(Token.new(:NUMBER, @symbol)) do |token|
-      while consume != :EOF && /[0-9]/ =~ @symbol || (/\./ =~ @symbol && !number.include?(".") && /[0-9]/ =~ @input[@position + 1, 1])
+      while !eof? && /[0-9]/ =~ @symbol || (/\./ =~ @symbol && !number.include?(".") && /[0-9]/ =~ @input[@position + 1, 1])
         token.text << @symbol
       end
     end
@@ -21,7 +25,7 @@ module Consumers
   
   def consume_message
     returning(Token.new(:MESSAGE, @symbol)) do |token|
-      while consume != :EOF && /[a-zA-Z\?]/ =~ @symbol
+      while !eof? && /[a-zA-Z\?]/ =~ @symbol
         token.text << @symbol 
       end
     end
@@ -33,5 +37,9 @@ module Consumers
         token.text << @symbol
       end
     end
+  end
+  
+  def eof?
+    @symbol == :EOF
   end
 end
