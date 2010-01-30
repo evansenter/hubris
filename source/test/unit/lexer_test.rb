@@ -5,6 +5,10 @@ class LexerTest < Test::Unit::TestCase
     assert_lex("")
   end
   
+  def test_object
+    assert_lex('{}', [:L_SQUIG, "{"], [:R_SQUIG, "}"])
+  end
+  
   def test_string_receiving_message
     assert_lex('"Dinosaurs" capitalize', [:STRING, "Dinosaurs"], [:MESSAGE, "capitalize"])
   end
@@ -21,11 +25,11 @@ class LexerTest < Test::Unit::TestCase
     assert_lex("-1 + 1.0", [:INTEGER, "-1"], [:BINARY_MESSAGE, "+"], [:FLOAT, "1.0"])
   end
   
-  def test_method_definition
+  def test_function_definition
     assert_lex("[ raptor ]", [:L_BRACKET, "["], [:MESSAGE, "raptor"], [:R_BRACKET, "]"])
   end
   
-  def test_method_definition_with_parameters
+  def test_function_definition_with_parameters
     assert_lex("[ _raptor_1, Raptor2? : _raptor_1 + Raptor2? ]", 
       [:L_BRACKET,      "["], 
       [:MESSAGE,        "_raptor_1"], 
@@ -36,6 +40,25 @@ class LexerTest < Test::Unit::TestCase
       [:BINARY_MESSAGE, "+"],
       [:MESSAGE,        "Raptor2?"],
       [:R_BRACKET,      "]"]
+    )
+  end
+  
+  def first_order_function_call
+    assert_lex("self some_function .", 
+      [:MESSAGE, "raptor"], 
+      [:MESSAGE, "some_function"], 
+      [:DOT,     "."]
+    )
+  end
+  
+  def function_call_with_args
+    assert_lex("raptor(arg_1, arg_2)", 
+      [:MESSAGE, "raptor"], 
+      [:L_PAREN, "("], 
+      [:MESSAGE, "arg_1"], 
+      [:COMMA, ","],
+      [:MESSAGE, "arg_2"], 
+      [:R_PAREN, ")"]
     )
   end
 end
