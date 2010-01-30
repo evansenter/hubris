@@ -2,38 +2,40 @@ require File.join(File.dirname(__FILE__), "..", "test_helper.rb")
 
 class LexerTest < Test::Unit::TestCase
   def test_run_with_no_args
-    assert_equal [eof], lex("")
+    assert_lex("")
   end
   
-  def test_consume_whitespace
-    assert_equal [eof], lex(" ")
-    assert_equal [eof], lex("\t")
-    assert_equal [eof], lex(" \t")
+  def test_string_receiving_message
+    assert_lex('"Dinosaurs" capitalize', [:STRING, "Dinosaurs"], [:MESSAGE, "capitalize"])
   end
   
-  def test_consume_string__empty_case
-    assert_equal [token(:STRING, ''), eof], lex('""')
+  def test_message_receiving_message
+    assert_lex("dinosaurs capitalize", [:MESSAGE, "dinosaurs"], [:MESSAGE, "capitalize"])
   end
   
-  def test_consume_string__base_case
-    assert_equal [token(:STRING, 'Dinosaur'), eof], lex('"Dinosaur"')
+  def test_arithmetic
+    assert_lex("1 + 1", [:INTEGER, "1"], [:BINARY_MESSAGE, "+"], [:INTEGER, "1"])
   end
   
-  def test_consume_string__escaped_inner_quote
-    assert_equal [token(:STRING, 'Dino\"saur'), eof], lex('"Dino\"saur"')
+  def test_arithmetic_with_mixed_types_and_signs
+    assert_lex("-1 + 1.0", [:INTEGER, "-1"], [:BINARY_MESSAGE, "+"], [:FLOAT, "1.0"])
   end
   
-  private
-  
-  def lex(string)
-    Lexer.new(string).run
+  def test_method_definition
+    assert_lex("[ raptor ]", [:L_BRACKET, "["], [:MESSAGE, "raptor"], [:R_BRACKET, "]"])
   end
   
-  def token(type, text)
-    Token.new(type, text)
-  end
-  
-  def eof
-    token(:EOF, "EOF")
+  def test_method_definition_with_parameters
+    assert_lex("[ _raptor_1, Raptor2? : _raptor_1 + Raptor2? ]", 
+      [:L_BRACKET,      "["], 
+      [:MESSAGE,        "_raptor_1"], 
+      [:COMMA,          ","],
+      [:MESSAGE,        "Raptor2?"],
+      [:COLON,          ":"],
+      [:MESSAGE,        "_raptor_1"], 
+      [:BINARY_MESSAGE, "+"],
+      [:MESSAGE,        "Raptor2?"],
+      [:R_BRACKET,      "]"]
+    )
   end
 end
