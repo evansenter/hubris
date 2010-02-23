@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), "..", "test_helper.rb")
 
-class ConsumersTest < Test::Unit::TestCase  
+class ConsumersTest < Test::Unit::TestCase
   def test_consume_whitespace
     assert_lex(" ")
     assert_lex("\t")

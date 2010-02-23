@@ -43,15 +43,15 @@ class LexerTest < Test::Unit::TestCase
     )
   end
   
-  def first_order_function_call
-    assert_lex("self some_function .", 
-      [:message, "raptor"], 
+  def test_first_order_function_call
+    assert_lex("self some_function.", 
+      [:message, "self"], 
       [:message, "some_function"], 
       [:dot,     "."]
     )
   end
   
-  def function_call_with_args
+  def test_function_call_with_args
     assert_lex("raptor(arg_1, arg_2)", 
       [:message, "raptor"], 
       [:l_paren, "("], 
@@ -59,6 +59,16 @@ class LexerTest < Test::Unit::TestCase
       [:comma, ","],
       [:message, "arg_2"], 
       [:r_paren, ")"]
+    )
+  end
+  
+  def test_two_expressions_on_one_line
+    assert_lex("self some_function; self another_function", 
+      [:message, "self"], 
+      [:message, "some_function"], 
+      [:semicolon, ";"], 
+      [:message, "self"], 
+      [:message, "another_function"]
     )
   end
 end

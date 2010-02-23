@@ -2,6 +2,7 @@ module Consumers
   BINARY_REGEX = /&|\||!|<|=|>|\+|-|\*|\/|%|\^/
   KEY_TOKENS   = {
     ":" => :colon,
+    ";" => :semicolon,
     "." => :dot,
     "," => :comma,
     "(" => :l_paren,
