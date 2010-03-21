@@ -1,20 +1,34 @@
 class Parser
+  include StateParsers
+  
   def initialize(tokens)
-    @tokens   = tokens
-    @position = 0
+    @tokens      = tokens
+    @position    = 0
+    @markers     = []
+    @memoization = {}
+  end
+
+  def mark
+    @markers << @position
   end
   
-  def build_ast
-    while @position < @tokens.length && !eof?
-      parse
+  def release
+    @position = @markers.pop
+  end
+  
+  def speculating?
+    !@markers.empty?
+  end
+  
+  def parsed_rule?
+    case memoized_position = @memoization[@position]
+    when nil   then return false
+    when false then raise ParseFailedException
+    else @position = memoized_position
     end
   end
   
-  def parse
-    
-  end
-  
-  def eof?
-    @tokens[@position].type == :eof
+  def memoize(start_position, final_state)
+    @memoization[start_position] = final_state
   end
 end
