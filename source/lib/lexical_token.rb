@@ -1,0 +1,1 @@
+LexicalToken = Struct.new(:pattern, :block)

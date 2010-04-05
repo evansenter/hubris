@@ -1,0 +1,1 @@
+Match = Struct.new(:pattern, :block)
