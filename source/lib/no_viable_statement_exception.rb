@@ -1,2 +1,0 @@
-class NoViableStatementException < Exception
-end
